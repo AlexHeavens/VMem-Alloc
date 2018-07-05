@@ -1,0 +1,75 @@
+Function	Time(us)	Alloc Mem	Free Mem	No. Alloc	No. Free	Largest Free
+vmemalloc	43	4000	92	1	1	88
+vmefree  	140	0	4096	0	1	4092
+vmemalloc	157	4000	96	1	1	88
+vmefree  	234	0	4100	0	1	4092
+vmemalloc	251	4000	100	1	1	88
+vmemalloc	328	8000	192	2	2	88
+vmefree  	451	4000	4196	1	2	4092
+vmefree  	516	0	8200	0	2	4092
+vmemalloc	532	4000	4200	1	2	4092
+vmemalloc	562	8000	200	2	2	88
+vmefree  	682	4000	4204	1	2	4092
+vmefree  	739	0	8208	0	2	4092
+Function	Time(us)	Alloc Mem	Free Mem	No. Alloc	No. Free	Largest Free
+vmemalloc	28	4000	92	1	1	88
+vmefree  	102	0	4096	0	1	4092
+vmemalloc	112	4000	96	1	1	88
+vmefree  	191	0	4100	0	1	4092
+vmemalloc	206	4000	100	1	1	88
+vmemalloc	260	8000	192	2	2	88
+vmefree  	355	4000	4196	1	2	4092
+vmefree  	401	0	8200	0	2	4092
+vmemalloc	410	4000	4200	1	2	4092
+vmemalloc	431	8000	200	2	2	88
+vmefree  	523	4000	4204	1	2	4092
+vmefree  	565	0	8208	0	2	4092
+Function	Time(us)	Alloc Mem	Free Mem	No. Alloc	No. Free	Largest Free
+vmemalloc	6	4000	88	1	1	80
+vmefree  	28	0	4096	0	1	4088
+vmemalloc	29	4000	96	1	1	80
+vmefree  	40	0	4104	0	1	4088
+vmemalloc	41	4000	104	1	1	80
+vmemalloc	51	8000	192	2	2	80
+vmefree  	68	4000	4200	1	2	4088
+vmefree  	75	0	8208	0	2	4088
+vmemalloc	76	4000	4208	1	2	4088
+vmemalloc	80	8000	208	2	2	80
+vmefree  	97	4000	4216	1	2	4088
+vmefree  	104	0	8224	0	2	4088
+Function	Time(us)	Alloc Mem	Free Mem	No. Alloc	No. Free	Largest Free
+vmemalloc	6	4000	88	1	1	80
+vmefree  	29	0	4096	0	1	4088
+vmemalloc	30	4000	96	1	1	80
+vmefree  	41	0	4104	0	1	4088
+vmemalloc	42	4000	104	1	1	80
+vmemalloc	52	8000	192	2	2	80
+vmefree  	69	4000	4200	1	2	4088
+vmefree  	77	0	8208	0	2	4088
+vmemalloc	78	4000	4208	1	2	4088
+vmemalloc	82	8000	208	2	2	80
+vmefree  	98	4000	4216	1	2	4088
+vmefree  	105	0	8224	0	2	4088
+Function	Time(us)	Alloc Mem	Free Mem	No. Alloc	No. Free	Largest Free
+vmemalloc	7	4000	88	1	1	80
+vmefree  	29	0	4096	0	1	4088
+vmemalloc	30	4000	96	1	1	80
+vmefree  	41	0	4104	0	1	4088
+vmemalloc	42	4000	104	1	1	80
+vmemalloc	51	8000	192	2	2	80
+vmefree  	68	4000	4200	1	2	4088
+vmefree  	76	0	8208	0	2	4088
+vmemalloc	77	4000	4208	1	2	4088
+vmemalloc	81	8000	208	2	2	80
+vmefree  	97	4000	4216	1	2	4088
+vmefree  	104	0	8224	0	2	4088
+Function	Time(us)	Alloc Mem	Free Mem	No. Alloc	No. Free	Largest Free
+vmemalloc	9	4000	88	1	1	80
+vmefree  	44	0	4096	0	1	4088
+vmemalloc	47	4000	96	1	1	80
+vmefree  	69	0	4104	0	1	4088
+vmemalloc	71	4000	104	1	1	80
+vmemalloc	92	8000	192	2	2	80
+vmefree  	125	4000	4200	1	2	4088
+vmefree  	137	0	8216	0	1	8096
+vmemalloc	139	4000	4216	1	1	8096
