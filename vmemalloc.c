@@ -490,6 +490,7 @@ void coalesce_both(unsigned long *block) {
 		// ..and the previous block is free, coalesce the previous block.
 		if (!get_used(prevBlock) &&
 			((void *)prevBlock + get_size(prevBlock) + HEADER_SIZE) == block) {
+
 			// Make sure to update local block pointers in case we also coalesce
 			// forward.
 			coalesce_backward(block);
