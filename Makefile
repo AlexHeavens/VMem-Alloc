@@ -1,30 +1,35 @@
 CC = gcc
 CFLAGS = -g -Wall -Wextra
-LIBOBJS = vmemalloc.o vmemprint.o vmemtest.o
+
+BUILD_DIR = build
+BIN_DIR = bin
+LIB_DIR = lib
+
+LIB_OBJS = $(BUILD_DIR)/vmemalloc.o $(BUILD_DIR)/vmemprint.o $(BUILD_DIR)/vmemtest.o
 LIB = vmemalloc
-LIBFILE = lib$(LIB).a
+LIB_FILE = $(LIB_DIR)/lib$(LIB).a
 
 all: test1 testSetA testSetB testSetC
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< 
+$(BUILD_DIR)/%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
 
-test1 : test1.o $(LIB)
-	$(CC) test1.o $(CFLAGS) -o test1 -L. -l$(LIB)
+test1 : $(BUILD_DIR)/test1.o $(LIB)
+	$(CC) $(BUILD_DIR)/test1.o $(CFLAGS) -o $(BIN_DIR)/test1 -L$(LIB_DIR) -l$(LIB)
 
-testSetA : testSetA.o $(LIB)
-	$(CC) testSetA.o $(CFLAGS) -o testSetA -L. -l$(LIB)
+testSetA : $(BUILD_DIR)/testSetA.o $(LIB)
+	$(CC) $(BUILD_DIR)/testSetA.o $(CFLAGS) -o $(BIN_DIR)/testSetA -L$(LIB_DIR) -l$(LIB)
 
-testSetB : testSetB.o $(LIB)
-	$(CC) testSetB.o $(CFLAGS) -o testSetB -L. -l$(LIB)
-	
-testSetC : testSetC.o $(LIB)
-	$(CC) testSetC.o $(CFLAGS) -o testSetC -L. -l$(LIB)
+testSetB : $(BUILD_DIR)/testSetB.o $(LIB)
+	$(CC) $(BUILD_DIR)/testSetB.o $(CFLAGS) -o $(BIN_DIR)/testSetB -L$(LIB_DIR) -l$(LIB)
 
-$(LIB) : $(LIBOBJS)
-	ar -cvr $(LIBFILE) $(LIBOBJS)
-	#ranlib $(LIBFILE) # may be needed on some systems
-	ar -t $(LIBFILE)
+testSetC : $(BUILD_DIR)/testSetC.o $(LIB)
+	$(CC) $(BUILD_DIR)/testSetC.o $(CFLAGS) -o $(BIN_DIR)/testSetC -L$(LIB_DIR) -l$(LIB)
+
+$(LIB) : $(LIB_OBJS)
+	ar -cvr $(LIB_FILE) $(LIB_OBJS)
+	#ranlib $(LIB_FILE) # may be needed on some systems
+	ar -t $(LIB_FILE)
 
 clean:
-	/bin/rm -f *.o test1 testSetA testSetB testSetC $(LIBFILE)
+	rm -f $(BUILD_DIR)/* $(BIN_DIR)/* $(LIB_FILE)
