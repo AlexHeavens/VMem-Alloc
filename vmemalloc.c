@@ -15,27 +15,27 @@ unsigned long used_bm;
 unsigned long size_bm;
 
 signed short asc_addrs = 0;
-unsigned long* last_mmap = NULL;
-unsigned long* free_start = NULL;
-unsigned long* free_end = NULL;
+unsigned long *last_mmap = NULL;
+unsigned long *free_start = NULL;
+unsigned long *free_end = NULL;
 
 // Function Prototypes.
-void header_stamp(unsigned long* start, unsigned long size, unsigned long used);
-unsigned long get_used(unsigned long* block);
-unsigned long get_size(unsigned long* block);
-void set_used(unsigned long* block, unsigned long used);
-void set_size(unsigned long* block, unsigned long size);
-unsigned long* get_prev_free(unsigned long* block);
-unsigned long* get_next_free(unsigned long* block);
-void set_prev_free(unsigned long* block, unsigned long* newPrev);
-void set_next_free(unsigned long* block, unsigned long* newNext);
-void free_add(unsigned long* block);
-void* find_free_block(unsigned long size);
-void coalesce_forward(unsigned long* block);
-void coalesce_backward(unsigned long* block);
-void coalesce(unsigned long* firstBlock, unsigned long* secondBlock);
-void coalesce_both(unsigned long* block);
-unsigned long* allocate_mem(unsigned long size);
+void header_stamp(unsigned long *start, unsigned long size, unsigned long used);
+unsigned long get_used(unsigned long *block);
+unsigned long get_size(unsigned long *block);
+void set_used(unsigned long *block, unsigned long used);
+void set_size(unsigned long *block, unsigned long size);
+unsigned long *get_prev_free(unsigned long *block);
+unsigned long *get_next_free(unsigned long *block);
+void set_prev_free(unsigned long *block, unsigned long *newPrev);
+void set_next_free(unsigned long *block, unsigned long *newNext);
+void free_add(unsigned long *block);
+void *find_free_block(unsigned long size);
+void coalesce_forward(unsigned long *block);
+void coalesce_backward(unsigned long *block);
+void coalesce(unsigned long *firstBlock, unsigned long *secondBlock);
+void coalesce_both(unsigned long *block);
+unsigned long *allocate_mem(unsigned long size);
 unsigned long largest_free_region();
 
 /* Record usage statistics for trace data. */
@@ -56,7 +56,7 @@ static unsigned long currentFreeRegions = 0l;
 static unsigned long largestFreeRegion = 0l;
 
 // The output stream to which trace data will be written
-static FILE* traceFile = NULL;
+static FILE *traceFile = NULL;
 
 // This is to identify the fist call to output the trace data (first call to
 // vmemfree or vmemalloc). Before any trace data is written the collumn headers
@@ -94,7 +94,7 @@ void outputTraceColumnHeaders() {
 }
 
 // Outputs tab seperated trace data
-void outputTraceData(const char* op) {
+void outputTraceData(const char *op) {
 	// Only output trace data if the trace file has been set.
 	if (traceFile != NULL) {
 		if (firstCall) {
@@ -116,7 +116,7 @@ address of the newly allocated memory.
 
 size - size of memory to allocate.
 */
-void* vmemalloc(int size) {
+void *vmemalloc(int size) {
 	// We shouldn't attempt to allocate a negative or zero amount of memory.
 	assert(size > 0);
 	if (!last_mmap) {
@@ -133,12 +133,12 @@ void* vmemalloc(int size) {
 	// If there is not currently enough free space, mmap more.
 	if (largestFreeRegion <
 		(unsigned long)size + HEADER_SIZE + MIN_BLOCK_SIZE) {
-		unsigned long* newBlock = allocate_mem(size);
+		unsigned long *newBlock = allocate_mem(size);
 		free_add(newBlock);
 		coalesce_both(newBlock);
 	}
 
-	void* newRegion = find_free_block(size);
+	void *newRegion = find_free_block(size);
 	outputTraceData(VMEMALLOC_OP);
 	debug_printf("Have allocated %lu.", (unsigned long)newRegion);
 	return newRegion + HEADER_SIZE;
@@ -150,7 +150,7 @@ to free.  This works on an address- ordered basis.
 
 block - the location of the block to add to the free list.
 */
-void free_add(unsigned long* block) {
+void free_add(unsigned long *block) {
 	assert(block != NULL);
 	if (block) {
 		// If we are adding a used block to the free list, set it as free and
@@ -186,7 +186,7 @@ void free_add(unsigned long* block) {
 		}
 
 		// Otherwise, loop through the free list...
-		unsigned long* current = get_next_free(free_start);
+		unsigned long *current = get_next_free(free_start);
 		while (current != NULL) {
 			// If the next node has a greater address, insert the block into the
 			// free list here.
@@ -215,10 +215,10 @@ Frees allocated memory, returning it to the heap.
 
 ptr - pointer to the memory item to deallocate.
 */
-void vmemfree(void* ptr) {
+void vmemfree(void *ptr) {
 	assert(ptr != NULL);
 	// The value of currentAllocatedMemory should be reduced here
-	unsigned long* block = (ptr - HEADER_SIZE);
+	unsigned long *block = (ptr - HEADER_SIZE);
 	debug_printf("Freeing %lu size %lu", (unsigned long)block, get_size(block));
 	free_add(block);
 	coalesce_both(block);
@@ -226,7 +226,7 @@ void vmemfree(void* ptr) {
 }
 
 // Set the trace file. If path is NULL then trace is output to stdout.
-void setTraceFile(char* path) {
+void setTraceFile(char *path) {
 	if (traceFile == NULL) {
 		if (path != NULL) {
 			if ((traceFile = fopen(path, "a+")) == NULL) {
@@ -252,7 +252,7 @@ start - the location in memory that the block should start.
 size - the size that the block will have.
 used - whether or not the block is used.
 */
-void header_stamp(unsigned long* start, unsigned long size,
+void header_stamp(unsigned long *start, unsigned long size,
 				  unsigned long used) {
 	set_size(start, size);
 	set_used(start, used);
@@ -260,44 +260,44 @@ void header_stamp(unsigned long* start, unsigned long size,
 				 get_size(start));
 }
 
-unsigned long get_used(unsigned long* block) { return ((*block) & used_bm); }
+unsigned long get_used(unsigned long *block) { return ((*block) & used_bm); }
 
-unsigned long get_size(unsigned long* block) { return ((*block) & size_bm); }
+unsigned long get_size(unsigned long *block) { return ((*block) & size_bm); }
 
-void set_used(unsigned long* block, unsigned long used) {
-	char* isUsed = (used) ? "USED" : "FREE";
+void set_used(unsigned long *block, unsigned long used) {
+	char *isUsed = (used) ? "USED" : "FREE";
 	debug_printf("Setting %lu as %s.", (unsigned long)block, isUsed);
 	*block = (get_size(block) | used);
 }
 
-void set_size(unsigned long* block, unsigned long size) {
+void set_size(unsigned long *block, unsigned long size) {
 	debug_printf("Setting %lu as size %lu.", (unsigned long)block, size);
 	*block = (get_used(block) | size);
 }
 
 // Free list manipulators.
-unsigned long* get_prev_free(unsigned long* block) {
+unsigned long *get_prev_free(unsigned long *block) {
 	if (block == free_start) return NULL;
-	return *((unsigned long**)((void*)block + HEADER_SIZE));
+	return *((unsigned long **)((void *)block + HEADER_SIZE));
 }
 
-unsigned long* get_next_free(unsigned long* block) {
+unsigned long *get_next_free(unsigned long *block) {
 	if (block == free_end) return NULL;
-	return *(
-		(unsigned long**)((void*)block + HEADER_SIZE + sizeof(unsigned long*)));
+	return *((unsigned long **)((void *)block + HEADER_SIZE +
+								sizeof(unsigned long *)));
 }
 
-void set_prev_free(unsigned long* block, unsigned long* newPrev) {
+void set_prev_free(unsigned long *block, unsigned long *newPrev) {
 	assert(block != NULL);
-	*((unsigned long**)((void*)block + HEADER_SIZE)) = newPrev;
+	*((unsigned long **)((void *)block + HEADER_SIZE)) = newPrev;
 	debug_printf("Setting prev free of %lu to %lu.", (unsigned long)block,
 				 (unsigned long)newPrev);
 }
 
-void set_next_free(unsigned long* block, unsigned long* newNext) {
+void set_next_free(unsigned long *block, unsigned long *newNext) {
 	assert(block != NULL);
-	*((unsigned long**)((void*)block + HEADER_SIZE + sizeof(unsigned long*))) =
-		newNext;
+	*((unsigned long **)((void *)block + HEADER_SIZE +
+						 sizeof(unsigned long *))) = newNext;
 	debug_printf("Setting next free of %lu to %lu.", (unsigned long)block,
 				 (unsigned long)newNext);
 }
@@ -309,19 +309,19 @@ Splits the free block if it is larger. Works on a "first-fit" basis.
 size - the size of the required space.
 Returns a pointer to a block that is now allocated for that size.
 */
-void* find_free_block(unsigned long size) {
+void *find_free_block(unsigned long size) {
 	// Ensure that the allocated space is enough to contain free list pointers.
 	unsigned long min = (size >= MIN_BLOCK_SIZE - HEADER_SIZE)
 							? size
 							: MIN_BLOCK_SIZE - HEADER_SIZE;
 
 	// Loop through the free list.
-	unsigned long* current = free_start;
+	unsigned long *current = free_start;
 	while (current != NULL) {
 		// If we have space at this node, take it.
 		if (get_size(current) >= min) {
-			unsigned long* newEmptyBlock;
-			unsigned long* newUsedBlock;
+			unsigned long *newEmptyBlock;
+			unsigned long *newUsedBlock;
 
 			// If there is not enough spare space to create a new free block,
 			// take it all.
@@ -353,9 +353,9 @@ void* find_free_block(unsigned long size) {
 
 			} else {
 				// Otherwise, create a new free block to fill the extra space.
-				unsigned long* newBlock =
-					(asc_addrs) ? ((void*)current + min + HEADER_SIZE)
-								: ((void*)current + get_size(current) - min);
+				unsigned long *newBlock =
+					(asc_addrs) ? ((void *)current + min + HEADER_SIZE)
+								: ((void *)current + get_size(current) - min);
 				unsigned long oldSize = get_size(current);
 				unsigned long newSize = (oldSize - min - HEADER_SIZE);
 
@@ -418,7 +418,7 @@ Loops through the free list to find size of the largest free region.
 unsigned long largest_free_region() {
 	// Loop through the free blocks.
 	unsigned long currentLargest = 0l;
-	unsigned long* current = free_start;
+	unsigned long *current = free_start;
 	while (current != NULL) {
 		// Make a note of the largest free we find.
 		if (get_size(current) > currentLargest)
@@ -433,7 +433,7 @@ unsigned long largest_free_region() {
 Coalesces a block forwards.  Works on the assumption that the next free block is
 free.
 */
-void coalesce_forward(unsigned long* block) {
+void coalesce_forward(unsigned long *block) {
 	assert(!get_used(block));
 	debug_printf("Coalescing %lu forward.", (unsigned long)block);
 	coalesce(block, get_next_free(block));
@@ -443,7 +443,7 @@ void coalesce_forward(unsigned long* block) {
 Coalesces a block backwards.  Works on the assumption that the previous free
 block is free.
 */
-void coalesce_backward(unsigned long* block) {
+void coalesce_backward(unsigned long *block) {
 	assert(!get_used(block));
 	debug_printf("Coalescing %lu backward.", (unsigned long)block);
 	coalesce(get_prev_free(block), block);
@@ -452,17 +452,18 @@ void coalesce_backward(unsigned long* block) {
 /**
 Coalesces two blocks.  Works on the assumption that both blocks are free.
 */
-void coalesce(unsigned long* firstBlock, unsigned long* secondBlock) {
+void coalesce(unsigned long *firstBlock, unsigned long *secondBlock) {
 	assert(firstBlock < secondBlock);
 	debug_printf("(Coalescing %lu and %lu)", (unsigned long)firstBlock,
 				 (unsigned long)secondBlock);
 
 	// Remove the second block from the free list.
 	set_next_free(firstBlock, get_next_free(secondBlock));
-	if (secondBlock != free_end)
+	if (secondBlock != free_end) {
 		set_prev_free(get_next_free(secondBlock), firstBlock);
-	else
+	} else {
 		free_end = firstBlock;
+	}
 
 	// Adjust the size of the first block.
 	unsigned long newSize =
@@ -480,24 +481,29 @@ void coalesce(unsigned long* firstBlock, unsigned long* secondBlock) {
 Given a block, this will check if the previous and latter blocks can be
 coalesced, which it will do.
 */
-void coalesce_both(unsigned long* block) {
+void coalesce_both(unsigned long *block) {
 	assert(!get_used(block));
 
 	// If we aren't at the start of the memory space..
-	unsigned long* prevBlock = get_prev_free(block);
+	unsigned long *prevBlock = get_prev_free(block);
 	if (prevBlock) {
 		// ..and the previous block is free, coalesce the previous block.
 		if (!get_used(prevBlock) &&
-			((void*)prevBlock + get_size(prevBlock) + HEADER_SIZE) == block)
+			((void *)prevBlock + get_size(prevBlock) + HEADER_SIZE) == block) {
+			// Make sure to update local block pointers in case we also coalesce
+			// forward.
 			coalesce_backward(block);
+			block = prevBlock;
+			prevBlock = get_prev_free(block);
+		}
 	}
 
 	// If the next block isn't the end of the memory space and it is free,
 	// coalesce it.
-	unsigned long* nextBlock = get_next_free(block);
+	unsigned long *nextBlock = get_next_free(block);
 	if (nextBlock) {
 		if (!get_used(nextBlock) &&
-			((void*)block + get_size(block) + HEADER_SIZE) == nextBlock)
+			((void *)block + get_size(block) + HEADER_SIZE) == nextBlock)
 			coalesce_forward(block);
 	}
 }
@@ -505,7 +511,7 @@ void coalesce_both(unsigned long* block) {
 /**
 MMaps a multiple of the page size that can contain the requested size.
 */
-unsigned long* allocate_mem(unsigned long size) {
+unsigned long *allocate_mem(unsigned long size) {
 	// We need to keep enough space for a header.
 	unsigned long totalSize = size + HEADER_SIZE;
 
@@ -517,7 +523,7 @@ unsigned long* allocate_mem(unsigned long size) {
 	}
 
 	// mmap the space we need.
-	unsigned long* newBlock = mmap(last_mmap, numPages * sysconf(_SC_PAGESIZE),
+	unsigned long *newBlock = mmap(last_mmap, numPages * sysconf(_SC_PAGESIZE),
 								   PROT_EXEC | PROT_READ | PROT_WRITE,
 								   MAP_ANONYMOUS | MAP_PRIVATE, 0, 0);
 	debug_printf("Have mmapped size %lu at location %lu.",

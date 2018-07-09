@@ -4,7 +4,8 @@
 // Function prototypes;
 
 /**
-print_block() prints a block, the format of which is dependent on if the block is used or not.
+print_block() prints a block, the format of which is dependent on if the block
+is used or not.
 */
 void print_block(unsigned long* block);
 

@@ -7,7 +7,8 @@
 #define USED used_bm
 #define FREE 0l
 #define HEADER_SIZE (sizeof(unsigned long) * 1l)
-#define MIN_BLOCK_SIZE ((sizeof(unsigned long) * 1l) + (sizeof(unsigned long*) * 2l))
+#define MIN_BLOCK_SIZE \
+	((sizeof(unsigned long) * 1l) + (sizeof(unsigned long*) * 2l))
 
 // Global variable assumptions.
 extern unsigned long used_bm;
