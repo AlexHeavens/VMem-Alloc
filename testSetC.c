@@ -12,7 +12,7 @@ void testBoundaryCaseAlloc();
 int main() {
 	setupTimer();
 	struct stat st;
-	if (!stat("./test data", &st)) mkdir("./test data", S_IRWXU);
+	if (stat("./test data", &st)) mkdir("./test data", S_IRWXU);
 	setTraceFile("test data/testSetCStats.txt");
 
 	testBoundaryCaseAlloc();
