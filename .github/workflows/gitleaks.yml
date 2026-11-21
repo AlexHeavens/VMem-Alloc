@@ -1,0 +1,31 @@
+name: Gitleaks
+
+# Server-side backstop for the pre-commit hook, which `git commit --no-verify`
+# or a clone made before setup.sh skips. Scans the whole history.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gitleaks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Install gitleaks
+        run: ./scripts/install-gitleaks.sh "$RUNNER_TEMP/bin"
+
+      - name: Scan the history
+        run: '"$RUNNER_TEMP/bin/gitleaks" git --redact --no-banner'

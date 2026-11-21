@@ -1,0 +1,9 @@
+#!/bin/bash
+# Block a commit whose staged changes hold a secret. Enable it with
+# `git config core.hooksPath .githooks`. Findings print redacted: rule, file and line only.
+set -euo pipefail
+if ! command -v gitleaks >/dev/null 2>&1; then
+    echo "pre-commit: gitleaks is not installed (run scripts/install-gitleaks.sh); cannot scan staged changes" >&2
+    exit 1
+fi
+exec gitleaks git --pre-commit --staged --redact --no-banner
