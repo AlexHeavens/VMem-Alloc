@@ -121,8 +121,8 @@ void *vmemalloc(int size) {
 	assert(size > 0);
 	if (!last_mmap) {
 		// Create the bitmasks we will be using.
-		used_bm = (1l << (HEADER_SIZE * 8l - 1l));
-		size_bm = (~(1l << (HEADER_SIZE * 8l - 1l)));
+		used_bm = (1ul << (HEADER_SIZE * 8ul - 1ul));
+		size_bm = (~(1ul << (HEADER_SIZE * 8ul - 1ul)));
 
 		debug_printf("First call of vmemalloc.\n");
 		debug_printf("Using bit masks used_bm(%lu) and size_bm(%lu)", used_bm,

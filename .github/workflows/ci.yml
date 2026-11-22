@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Lint workflows and shell scripts
+        run: scripts/lint.sh
+
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: plain
+            extra_cflags: ''
+          - name: sanitizers
+            extra_cflags: '-O1 -fsanitize=address,undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer'
+    name: test (${{ matrix.name }})
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # The Makefile builds with -Wall -Wextra -Werror, so a warning fails the build.
+      - name: Build and run the tests
+        run: make -j2 test EXTRA_CFLAGS="$EXTRA_CFLAGS"
+        env:
+          EXTRA_CFLAGS: ${{ matrix.extra_cflags }}
